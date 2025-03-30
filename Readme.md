@@ -1,23 +1,49 @@
-# Mission 2
+# Mission 3
 
-## Part 0
+## Part 1,2
 
-[Link to video](https://drive.google.com/file/d/1IJhVCjGBdt8i2OKA6VGh75jEgFWBNij1/view?usp=drive_link)
+[Link to video](https://drive.google.com/file/d/1ipToImjRHgNbLsWd1SsomWODolPhPg2K/view?usp=sharing)
 
-## Part1
-
+## Part 3
 - Вопрос 1	 
-> SSH-ключи позволяют шифровать данные, обеспечивая их безопасность, а также аутентифицировать пользовалетей. С помощью SSH-ключей можно заходить на удаленные серверы и управлять ими.  
+> **SELECT** username **FROM** users
 
-- Вопрос 2	 
->  ~/.ssh/authorized_keys
+- Запрос 2	 
+>  **SELECT** 
+    u.username **AS** username,
+    COUNT(m.id) **AS** "number of sent messages"
+**FROM** 
+    users u
+**LEFT JOIN** 
+    messages m **ON** u.id = m.from
+**GROUP BY** 
+    u.id, u.username
 
 - Вопрос 3	 
-> Long polling — способ получения сообщений с серверов телеграм, при котором получение уведомлений об обновлении (новых сообщениях) мы получаем по предварительному запросу. В то время как webhooks позволяет телеграму отправлять запрос об обновлении на наш сервер каждый раз, когда на наш бот приходит сообщение. 
+>  **SELECT** 
+    u.username **AS** username,
+    **COUNT**(m.id) **AS** "number of received messages"
+**FROM** 
+    users u
+**JOIN** 
+    messages m ON u.id = m.to
+**GROUP BY** 
+    u.id, u.username
+**ORDER BY** 
+    **COUNT**(m.id) **DESC**
+**LIMIT** 1;
 
 - Вопрос 4	 
-> Issues в GitHub -  внутренний таскер, позволяющий ставить задачи, подзадачи, визуализировать ход проекта. Таким образом, данная функция позволяет коммуницировать разработчикам, дизайнерам, службе поддержке или пользователям для обнаружения ошибок, внесения различных правок [Пример1](https://github.com/Semmle/SecurityExploits/issues/12) [Пример2](https://github.com/Semmle/demos/issues/18)
-
-
-- Вопрос 5	 
->  Добавить в папку images любой файл (пустой/не пустой) или создать файл .gitkeep
+> **SELECT** 
+    **AVG**(message_count) **AS** "average messages per user"
+**FROM** (
+    **SELECT** 
+        u.id,
+        **COUNT**(m.id) **AS** message_count
+    **FROM** 
+        users u
+    **LEFT JOIN** 
+        messages m **ON** u.id = m.from
+    **GROUP BY** 
+        u.id
+) **AS** user_message_counts;
